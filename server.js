@@ -1,16 +1,25 @@
-const express = require("express");
-const db = require("./config/connection");
-const routes = require("./routes");
-
-const PORT = process.env.PORT || 3001;
+const express = require('express');
+const mongoose = require('mongoose');
 const app = express();
+require('dotenv').config(); // Ensure this line is at the top
 
-app.use(express.urlencoded({ extended: true }));
+// Middleware
 app.use(express.json());
-app.use(routes);
+app.use(express.urlencoded({ extended: true }));
 
-db.once('open', () => {
-  app.listen(PORT, () => {
-    console.log(`API server running on port ${PORT}!`);
-  });
+// Routes
+app.use('/api/users', require('./routes/userRoutes'));
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/social-network', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.error(err));
+
+// Start server
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

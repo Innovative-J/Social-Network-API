@@ -1,8 +1,9 @@
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+const mongoose = require('mongoose');
+require('dotenv').config();
 
-dotenv.config();
-
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/api_social_network_db");
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 module.exports = mongoose.connection;
